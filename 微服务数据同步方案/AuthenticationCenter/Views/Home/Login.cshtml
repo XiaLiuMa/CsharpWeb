@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewData["Title"] = "登录页";
+}
+
+<div id="id=" app"">
+    <form class="layui-form" method="post">
+        <table style="margin-left:160px; background-color:#f7f7f7;border:solid 1px #c0c0c0;">
+            <tr>
+                <td style="padding:10px 30px 0 30px;">
+                    账号:<br />
+                    <input type="text" name="acc" v-model="user.uid" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:10px 30px 0 30px;">
+                    密码:<br />
+                    <input type="password" name="pwd" v-model="user.pwd" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 30px 10px 30px;">
+                    <input type="checkbox" name="rememberMe" value="1" /> 记住我 &nbsp;&nbsp;&nbsp;
+                    <button type="submit" value="登录" v-on:click="login(user.uid,user.pwd)" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+@section Scripts{
+    <script>
+        var vue = new Vue({
+            el: "#app",
+            data: {
+                user: {
+                    Uid: "123",
+                    Pwd: "456",
+                }
+            },
+            methods: {
+                login: function (uid, pwd) {
+                    axios.post('@Url.Action("Login", "Account")', { User: { Uid: uid, Pwd: pwd }})
+                        .then(
+                            (response) => {
+                            this.contactsList = [];
+                            for (var i = 0; i < response.data.length; i++) {
+                                this.contactsList.push(response.data[i]);
+                            }
+                            this.contactsList.push({ Id: "", Name: "", PhoneNo: "", EmailAddress: "" });
+                        },
+                        (response) => {
+                            alert(response.status);
+                        })
+                        .catch(function (response) {
+                        alert(response);
+                    });
+                },
+            }
+        });
+    </script>
+}

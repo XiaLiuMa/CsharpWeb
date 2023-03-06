@@ -1,0 +1,46 @@
+{
+  "GlobalConfiguration": { //全局配置
+    "BaseUrl": "https://localhost:5050",
+    "ServiceDiscoveryProvider": { //配置服务发现：如果未指定主机和端口，将使用Consul默认值
+      "Host": "localhost", //请求域名
+      "Port": 8500, //端口
+      "Type": "Consul",
+      "PollingInterval": 100 //以毫秒为单位，告诉Ocelot多久调用一次Consul来更改服务配置。
+    },
+    "RateLimitOptions": { //限流
+      "DisableRateLimitHeaders": false, //指定是否禁用X-Rate-Limit和Retry-After标头
+      "QuotaExceededMessage": "操作太快!", //指定超出的消息
+      "HttpStatusCode": 999, //指定返回的HTTP状态代码
+      "ClientIdHeader": "Test" //指定应用于标识客户端的标头。默认情况下为“ ClientId”
+    }
+  },
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/{url}", //下游服务路由地址
+      "DownstreamScheme": "http",
+      "UseServiceDiscovery": true,
+      "ServiceName": "Service01",
+      "LoadBalancerOptions": { "Type": "RoundRobin" }, //负载平衡，轮流发送
+      "UpstreamPathTemplate": "/api1/{url}", //上游服务路由地址
+      "UpstreamHttpMethod": [ "Get", "Post" ] // 支持的上游服务请求方式
+    },
+    {
+      "DownstreamPathTemplate": "/{url}", //下游服务路由地址
+      "DownstreamScheme": "http",
+      "UseServiceDiscovery": true,
+      "ServiceName": "Service02",
+      "LoadBalancerOptions": { "Type": "RoundRobin" }, //负载平衡，轮流发送
+      "UpstreamPathTemplate": "/api2/{url}", //上游服务路由地址
+      "UpstreamHttpMethod": [ "Get", "Post" ] // 支持的上游服务请求方式
+    },
+    {
+      "DownstreamPathTemplate": "/{url}", //下游服务路由地址
+      "DownstreamScheme": "http",
+      "UseServiceDiscovery": true,
+      "ServiceName": "Service03",
+      "LoadBalancerOptions": { "Type": "RoundRobin" }, //负载平衡，轮流发送
+      "UpstreamPathTemplate": "/api3/{url}", //上游服务路由地址
+      "UpstreamHttpMethod": [ "Get", "Post" ] // 支持的上游服务请求方式
+    }
+  ]
+}

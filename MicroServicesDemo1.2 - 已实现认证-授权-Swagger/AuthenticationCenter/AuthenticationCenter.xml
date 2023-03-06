@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AuthenticationCenter</name>
+    </assembly>
+    <members>
+        <member name="M:AuthenticationCenter.Controllers.AccountController.Login(System.String,System.String)">
+            <summary>
+            登入【采用Jwt认证，返回Token】
+            </summary>
+            <param name="userName"></param>
+            <param name="pwd"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthenticationCenter.Controllers.AccountController.Logout">
+            <summary>
+            登出【采用Jwt认证是不支持强制Token失效的，只能客户端删除Token，服务端等待Token超时】
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AuthenticationCenter.Controllers.HealthController">
+            <summary>
+            健康管理控制器
+            </summary>
+        </member>
+        <member name="M:AuthenticationCenter.Controllers.HealthController.ConsulHealth">
+            <summary>
+            Consul健康检测
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthenticationCenter.Controllers.HealthController.Test01">
+            <summary>
+            测试1
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthenticationCenter.Controllers.HealthController.Test02">
+            <summary>
+            测试2
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AuthenticationCenter.Controllers.HealthController.Test03(System.String)">
+            <summary>
+            测试03
+            </summary>
+            <param name="uid">学生账户</param>
+            <returns>测试实体</returns>
+        </member>
+        <member name="M:AuthenticationCenter.Core.JwtHandler.IssueJwt(AuthenticationCenter.Core.JwtUserInfo)">
+            <summary>
+            颁发JWT
+            </summary>
+            <param name="tokenModel">当前颁发对象的用户信息</param>
+            <returns>JWT字符串</returns>
+        </member>
+        <member name="M:AuthenticationCenter.Core.JwtHandler.SerializeJwtStr(System.String)">
+            <summary>
+            将JWT加密的字符串进行解析
+            </summary>
+            <param name="jwtStr">JWT加密的字符</param>
+            <returns>JWT中的用户信息</returns>
+        </member>
+        <member name="P:AuthenticationCenter.Core.JwtUserInfo.Uid">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:AuthenticationCenter.Core.JwtUserInfo.Role">
+            <summary>
+            角色
+            </summary>
+        </member>
+        <member name="P:AuthenticationCenter.Core.JwtUserInfo.Work">
+            <summary>
+            职能
+            </summary>
+        </member>
+        <member name="T:AuthenticationCenter.Models.TestMod">
+            <summary>
+            测试实体
+            </summary>
+        </member>
+        <member name="P:AuthenticationCenter.Models.TestMod.Name">
+            <summary>
+            姓名
+            </summary>
+        </member>
+        <member name="P:AuthenticationCenter.Models.TestMod.Age">
+            <summary>
+            年龄
+            </summary>
+        </member>
+        <member name="P:AuthenticationCenter.Models.TestMod.IsBoy">
+            <summary>
+            是否是男孩
+            </summary>
+        </member>
+        <member name="P:AuthenticationCenter.Models.TestMod.Exas">
+            <summary>
+            各科成绩
+            </summary>
+        </member>
+        <member name="T:AuthenticationCenter.Models.Examination">
+            <summary>
+            考试成绩
+            </summary>
+        </member>
+        <member name="P:AuthenticationCenter.Models.Examination.Name">
+            <summary>
+            科目名称
+            </summary>
+        </member>
+        <member name="P:AuthenticationCenter.Models.Examination.Score">
+            <summary>
+            分数
+            </summary>
+        </member>
+        <member name="P:AuthenticationCenter.Startup.Configuration">
+            <summary>
+            配置对象实例
+            </summary>
+        </member>
+        <member name="M:AuthenticationCenter.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            构造函数注入配置对象
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="M:AuthenticationCenter.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            配置注入容器的实例
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:AuthenticationCenter.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Hosting.IHostApplicationLifetime)">
+            <summary>
+            配置Http处理的管道
+            </summary>
+            <param name="app">应用程序生成器</param>
+            <param name="env">Web宿主环境</param>
+            <param name="lifetime">宿主应用程序的生命周期</param>
+        </member>
+    </members>
+</doc>

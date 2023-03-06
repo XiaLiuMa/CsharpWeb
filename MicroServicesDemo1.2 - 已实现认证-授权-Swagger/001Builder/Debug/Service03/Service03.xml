@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Service03</name>
+    </assembly>
+    <members>
+        <member name="M:Service03.Controllers.HealthController.ConsulHealth">
+            <summary>
+            Consul健康检测
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Service03.Controllers.HealthController.Test01">
+            <summary>
+            测试1
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Service03.Startup.Configuration">
+            <summary>
+            配置对象实例
+            </summary>
+        </member>
+        <member name="M:Service03.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            构造函数注入配置对象
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="M:Service03.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            配置注入容器的实例
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:Service03.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Hosting.IHostApplicationLifetime)">
+            <summary>
+            配置Http处理的管道
+            </summary>
+            <param name="app">应用程序生成器</param>
+            <param name="env">Web宿主环境</param>
+            <param name="lifetime">宿主应用程序的生命周期</param>
+        </member>
+    </members>
+</doc>

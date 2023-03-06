@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>D:\02Git\01Csharp\Csharp09Web\MicroServicesDemo1\001Builder\Debug\ApiGateway</OutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Ocelot" Version="17.0.1" />
+		<PackageReference Include="Ocelot.Provider.Consul" Version="17.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\CommonLibs\ConsulHander\ConsulHander.csproj" />
+	</ItemGroup>
+
+</Project>

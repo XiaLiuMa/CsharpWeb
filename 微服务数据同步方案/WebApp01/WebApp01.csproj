@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>D:\02Git\01Csharp\Csharp09Web\MicroServicesDemo1\001Builder\Debug\WebApp01</OutputPath>
+		<DocumentationFile>D:\02Git\01Csharp\Csharp09Web\MicroServicesDemo1\WebApp01\WebApp01.xml</DocumentationFile>
+		<NoWarn>1701;1702;1591;</NoWarn>
+	</PropertyGroup>
+
+</Project>

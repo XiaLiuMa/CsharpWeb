@@ -1,0 +1,284 @@
+﻿{
+  //官⽅方⽂文档ReRoutes全节点示例例
+  "ReRoutes": [
+    {
+      //Upstream表示上游请求，即客户端请求到API Gateway的请求
+      "UpstreamPathTemplate": "/", //请求路路径模板
+      "UpstreamHttpMethod": [ //请求⽅方法数组
+        "Get",
+        "POST",
+        "PUT",
+        "DELETE", "OPTIONS" ], //Downstreamb表示下游请求，即API Gateway转发的⽬目标服务地址 
+		"DownstreamScheme": "http", //请求协议，⽬目前应该是⽀支持http和https 
+		"DownstreamHostAndPorts": [ { "Host": "localhost", //请求服务地址，应该是可以是IP及域名 "Port": 8081 //端⼝口号  
+		} 
+		], 
+		"DownstreamPathTemplate": "/", //下游请求地址模板 // 以下节点可选
+		"RouteClaimsRequirement": { //标记该路路由是否需要认证 
+		"UserType": "registered" //示例例,K/V形式，授权声明，授权token中  会包含⼀一些claim，如填写则会判断是否和token中的⼀一致，不不⼀一致则不不准访问 }, //以下三个是将access claims转为⽤用户的Header Claims,QueryString，该  功能只有认证后可⽤用
+		"AddHeadersToRequest": { // "UserType": "Claims[sub] > value[0] > |", //示例例 
+		"UserId": "Claims[sub] > value[1] > |" //示例例  }, 
+		"AddClaimsToRequest": {}, 
+		"AddQueriesToRequest": {},
+		"RequestIdKey": "", //设置客户端的请求标识key，此key在请求header中  ，会转发到下游请求中 
+		"FileCacheOptions": { //缓存设置 
+		"TtlSeconds": 15, //ttl秒被设置为15，这意味着缓存将在15秒后过期  。
+		"Region": "" //缓存region，可以使⽤用administrator API清除  
+		},
+		"ReRouteIsCaseSensitive": false, //路路由是否匹配⼤大⼩小写
+		"ServiceName": "", //服务名称，服务发现时必填
+		"QoSOptions": { //断路路器器配置,⽬目前Ocelot使⽤用的Polly 
+		"ExceptionsAllowedBeforeBreaking": 0, //打开断路路器器之前允许的例例  外数量量。
+		"DurationOfBreak": 0, //断路路器器复位之前，打开的时间(毫秒) 
+		"TimeoutValue": 0 //请求超时时间(毫秒)  }, 
+		"LoadBalancer": "", //负载均衡 RoundRobin(轮询)/LeastConnection(  最少连接数)
+		"RateLimitOptions": { //官⽅方⽂文档未说明 
+		"ClientWhitelist": [], // 客户端⽩白明代 ？ 
+		"EnableRateLimiting": false, // 是否限流 ？ 
+		"Period": "", "PeriodTimespan": 0, 
+		"Limit": 0 
+		},
+		"AuthenticationOptions": { //认证配置 
+		"AuthenticationProviderKey": "", //这个key对应的是代码中.AddJW  TBreark中的Key 
+		"AllowedScopes": [] //使⽤用范围  
+		}, 
+		"HttpHandlerOptions": { "AllowAutoRedirect": true, //指示请求是否应该遵循重定向响应。  如果请求应该⾃自动遵循来⾃自Downstream资源的重定向响应，则将其设置为true; 否则为假。 默认值是true。
+		"UseCookieContainer": true //该值指示处理理程序是否使⽤用CookieCon  tainer属性来存储服务器器Cookie，并在发送请求时使⽤用这些Cookie。 默认值是true。
+		}, 
+		"UseServiceDiscovery": false //使⽤用服务发现，⽬目前Ocelot只⽀支持Consu  l的服务发现 } ], 
+		"GlobalConfiguration": {}
+		}
+
+
+//说明2
+参数说明：
+Downstream : 下游服务配置
+UpStream : 上游服务配置
+Aggregates : 服务聚合配置
+ServiceName, LoadBalancer, UseServiceDiscovery : 配置服务发现
+AuthenticationOptions : 配置服务认证
+RouteClaimsRequirement : 配置Claims鉴权
+RateLimitOptions : 为限流配置
+FileCacheOptions : 缓存配置
+QosOptions : 服务质量与熔断
+DownstreamHeaderTransform : 头信息转发
+DownstreamPathTemplate：下游戏
+DownstreamScheme：下游服务http schema
+DownstreamHostAndPorts：下游服务的地址，如果使用LoadBalancer的话这里可以填多项
+UpstreamPathTemplate: 上游也就是用户输入的请求Url模板
+UpstreamHttpMethod: 上游请求http方法，可使用数组
+Prioirty优先级： 对多个产生冲突的路由设置优化级
+————————————————
+版权声明：本文为CSDN博主「轻舟Canoe」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+
+具体运行项目测试参考原文链接：https://blog.csdn.net/huqngqing/article/details/110440720
+ 
+
+ 其中，我们需要了解一下微服务的上游服务器和下游服务器,以下是我个人的总结,下游服务器是提供Api接口，那么上游提供访问的规则，下游服务器配置就是我们刚才创建的json里面的，我们指定Host，port，以及PathTemplate。
+
+通过配置文件，我们可以可以知道Ocelot是通过我们的json配置规则映射成了它自己可以识别的对象，转发给了后台的httpservice，从后端返回结果。
+
+通过配置文件可以完成对 Ocelot 的功能配置： 路由、服务聚合、服务发现、认证、鉴权、限流、熔断、缓存、 Header 头传递 等。我们上面的配置说明都已经写好了,比较重要的就是如下，下面你可以多留意。
+
+DownstreamPathTemplate：下游戏
+DownstreamScheme：下游服务http schema
+DownstreamHostAndPorts：下游服务的地址，如果使用LoadBalancer的话这里可以填多项
+UpstreamPathTemplate: 上游也就是用户输入的请求Url模板
+UpstreamHttpMethod: 上游请求http方法，可使用数组
+————————————————
+版权声明：本文为CSDN博主「qq_39110534」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_39110534/article/details/85241562
+
+
+负责均衡配置(LoadBalancerOptions)：
+LeastConnection – 将请求发往最空闲的那个服务器
+RoundRobin – 轮流发送
+NoLoadBalance – 总是发往第一个请求（如果配置了服务发现，则总是发往发现的第一个服务地址）
+CookieStickySessions - 使用cookie关联所有相关的请求到制定的服务。
+
+//参考1：
+{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 3003
+        }
+      ],
+      "UpstreamPathTemplate": "/API001/{everything}",
+      "UpstreamHttpMethod": [ "Get" ],
+      //服务发现设置：Ocelot将从服务发现提供程序中查找下游主机和端口，并在所有可用服务中进行负载平衡请求。
+      "ServiceName": "API001", //告诉Ocelot ReRoutes是使用服务发现提供者作为其主机和端口
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": { //负载均衡
+        "Type": "RoundRobin" //LeastConnection
+      },
+      "RateLimitOptions": {
+        "ClientWhitelist": [], //客户端白名单
+        "EnableRateLimiting": true, //指定启用端点速率限制
+        "Period": "1m", //指定限制所适用的期间
+        "PeriodTimespan": 15, //指定可以在一定秒数后重试
+        "Limit": 5 //指定客户端在定义的时间内可以发出的最大请求数
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 3004
+        }
+      ],
+      "UpstreamPathTemplate": "/API002/{everything}",
+      "UpstreamHttpMethod": [ "Get" ],
+      //服务发现设置：Ocelot将从服务发现提供程序中查找下游主机和端口，并在所有可用服务中进行负载平衡请求。
+      "ServiceName": "API002", //告诉Ocelot ReRoutes是使用服务发现提供者作为其主机和端口
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": { //负载均衡
+        "Type": "RoundRobin" //LeastConnection
+      },
+      "RateLimitOptions": {
+        "ClientWhitelist": [], //客户端白名单
+        "EnableRateLimiting": true, //指定启用端点速率限制
+        "Period": "1m", //指定限制所适用的期间
+        "PeriodTimespan": 15, //指定可以在一定秒数后重试
+        "Limit": 5 //指定客户端在定义的时间内可以发出的最大请求数
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:1000",
+    "servicediscoveryprovider": { //如果未指定主机和端口，将使用consul默认值
+      "host": "localhost",
+      "port": 8500,
+      "type": "consul"
+    },
+    "RateLimitOptions": { //限流
+      "DisableRateLimitHeaders": false, //指定是否禁用X-Rate-Limit和Retry-After标头
+      "QuotaExceededMessage": "操作太快!", //指定超出的消息
+      "HttpStatusCode": 999, //指定返回的HTTP状态代码
+      "ClientIdHeader": "Test" //指定应用于标识客户端的标头。默认情况下为“ ClientId”
+    }
+  }
+}
+
+参考2：
+{
+  "ReRoutes": [ //配置路由信息
+    {
+      "UseServiceDiscovery": true,
+      //"DownstreamPathTemplate": "/{url}", //指定了下游的url及使用的通信协议，{url}是通配的意思
+      "DownstreamPathTemplate": "/{controller}/{action}", //网关转发到下游路由规则
+      "DownstreamScheme": "http", //下游服务http schema
+      "ServiceName": "FirstApi", //服务发现设置：Ocelot将从服务发现提供程序中查找下游主机和端口，并在所有可用服务中进行负载平衡请求。 
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+
+      //"UpstreamPathTemplate": "/FirstApi/{url}", //上游也就是用户输入的请求Url模板
+      "UpstreamPathTemplate": "/first/{controller}/{action}", //上游Api请求路由规则
+      "UpstreamHttpMethod": [ "Get" ], //上游请求http方法，可使用数组
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost", //下游地址
+          "Port": 5001 //下游端口号
+        }
+      ]
+    },
+    {
+      "UseServiceDiscovery": true,
+      //"DownstreamPathTemplate": "/{url}", //指定了下游的url及使用的通信协议，{url}是通配的意思
+      "DownstreamPathTemplate": "/{controller}/{action}",
+      "DownstreamScheme": "http",
+      "ServiceName": "SecondApi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"UpstreamPathTemplate": "/SecondApi/{url}",
+      "UpstreamPathTemplate": "/second/{controller}/{action}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ]
+    }
+  ],
+  //网关配置
+  "GlobalConfiguration": {
+    "RequestIdKey": "OcRequestId",
+    "BaseUrl": "http://localhost:5000/", //网关地址
+    "ServiceDiscoveryProvider": { //如果未指定主机和端口，将使用Consul默认值
+      "Host": "localhost", //请求域名
+      "Port": 8500, //端口
+      "Type": "Consul",
+      //以毫秒为单位，告诉Ocelot多久调用一次Consul来更改服务配置。
+      "PollingInterval": 100,
+      //如果你有在Consul上配置key/value，则在这里输入配置key。
+      "ConfigurationKey": "MyService_AB"
+    },
+    "RateLimitOptions": { //限流
+      "DisableRateLimitHeaders": false, //指定是否禁用X-Rate-Limit和Retry-After标头
+      "QuotaExceededMessage": "操作太快!", //指定超出的消息
+      "HttpStatusCode": 999, //指定返回的HTTP状态代码
+      "ClientIdHeader": "Test" //指定应用于标识客户端的标头。默认情况下为“ ClientId”
+    }
+  }
+}
+
+参考3：
+{
+  // 转发路由，数组中的每个元素都是某个服务的一组路由转发规则
+  "ReRoutes": [
+    {
+      "ServiceName": "Summer.Webapi", //对应consul配置的ServiceName
+      // Uri方案，http、https
+      "DownstreamScheme": "http",
+      // 下游（服务提供方）服务路由模板
+      "DownstreamPathTemplate": "/api/{path}",
+      // 上游（客户端，服务消费方）请求路由模板
+      "UpstreamPathTemplate": "/Summer/{path}",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin" //轮询     
+      },
+      "UseServiceDiscovery": true,
+      "RateLimitOptions": {
+        "ClientWhitelist": [ "admin" ], // 白名单
+        "EnableRateLimiting": true, // 是否启用限流
+        "Period": "1m", // 统计时间段：1s, 5m, 1h, 1d
+        "PeriodTimespan": 15, // 多少秒之后客户端可以重试
+        "Limit": 2 // 在统计时间段内允许的最大请求数量
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2, // 允许多少个异常请求
+        "DurationOfBreak": 15000, // 熔断的时间，单位为毫秒
+        "TimeoutValue": 5000 // 如果下游请求的处理时间超过多少则视如该请求超时
+      },
+      "FileCacheOptions": { // cache response data - ttl: 10s   10秒内相同url请求直接返回缓存数据
+        "TtlSeconds": 10,
+        "Region": ""
+      }
+    }
+  ],
+  // 全局配置，此节点的配置会覆盖ReRoutes，可以在这里设置一些通用的配置
+  "GlobalConfiguration": {
+    "ReRouteIsCaseSensitive": false,
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul" //由Consul提供服务发现
+    },
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": false, // Http头  X-Rate-Limit 和 Retry-After 是否禁用
+      "QuotaExceededMessage": "Too many requests, are you OK?", // 当请求过载被截断时返回的消息
+      "HttpStatusCode": 999, // 当请求过载被截断时返回的http status
+      "ClientIdHeader": "client_id" // 用来识别客户端的请求头，默认是 ClientId
+    }
+  }
+}
